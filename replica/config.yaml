@@ -1,0 +1,7 @@
+services:
+    - some-service-1
+    - some-service-2
+target_envs:
+    - stage
+    - prod
+folder_path: "promotion-jobs"
