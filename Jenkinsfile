@@ -1,10 +1,4 @@
 pipeline {
-    options { ... }
-
-    parameters { ... }
-
-    agent { ... }
-
     stages {
         stage('Test') {
             when {
