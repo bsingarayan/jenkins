@@ -12,7 +12,7 @@ node {
       echo "nothing to compile for hello.sh..."
     }
     stage('test') {
-      sh "+x ./test_hello.sh"
+      sh "sh +x ./test_hello.sh"
     }
     stage('package') {
       sh "tar -cvzf hello.tar.gz hello.sh"
