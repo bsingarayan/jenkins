@@ -1,7 +1,6 @@
 node {
   stage('Checkout') {
-    // Clean workspace and checkout shared library repository on the jenkins master
-    cleanWs()
+    // checkout shared library repository on the jenkins master
     checkout scm
   }
 
