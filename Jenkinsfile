@@ -1,57 +1,28 @@
-pipeline {
-    stages {
-        stage('Test') {
-            when {
-                changeRequest()
-            }
-            steps {
-                sh 'gradle clean test'
-            }
-            post {
-                always {
-                    archiveArtifacts allowEmptyArchive: true, artifacts: '**/build/reports/tests/**/*.*'
-                    junit allowEmptyResults: true, testResults: '**/build/test-results/test/*.xml'
-                }
-            }
-        }
-        stage('Run DSL') {
-            when {
-                anyOf {
-                    branch 'master'
-                }
-            }
-            steps {
-                script {
-                    try {
-                        jobDsl(
-                                failOnMissingPlugin: true,
-                                removedConfigFilesAction: 'DELETE',
-                                removedJobAction: 'DELETE',
-                                removedViewAction: 'DELETE',
-                                targets: 'jobs/**/*.groovy',
-                                unstableOnDeprecation: true
-                        )
-                    } catch (def e) {
-                        timeout(50) {
-                            echo "Looks like we might have to approve some DSL scripts. Please check at ${JENKINS_URL}/scriptApproval"
-                            input "DSL Scripts approved? Then 'continue', otherwise 'abort'."
-                            jobDsl(
-                                    failOnMissingPlugin: true,
-                                    removedConfigFilesAction: 'DELETE',
-                                    removedJobAction: 'DELETE',
-                                    removedViewAction: 'DELETE',
-                                    targets: 'jobs/**/*.groovy',
-                                    unstableOnDeprecation: true
-                            )
-                        }
-                    }
-                }
-            }
-        }
+#!groovy
+
+node {
+  try {
+    stage('checkout') {
+      checkout scm
     }
-    post {
-        cleanup {
-            cleanWs()
-        }
+    stage('prepare') {
+      sh "git clean -fdx"
     }
+    stage('compile') {
+      echo "nothing to compile for hello.sh..."
+    }
+    stage('test') {
+      sh "+x ./test_hello.sh"
+    }
+    stage('package') {
+      sh "tar -cvzf hello.tar.gz hello.sh"
+    }
+    stage('publish') {
+      echo "uploading package..."
+    }
+  } finally {
+    stage('cleanup') {
+      echo "doing some cleanup..."
+    }
+  }
 }
