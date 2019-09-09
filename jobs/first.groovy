@@ -1,6 +1,8 @@
 #!groovy
 
-node {
+def label="jenkins-node"
+
+node(label) {
   try {
     stage('checkout') {
       checkout scm
