@@ -1,7 +1,13 @@
-services:
-    - some-service-1
-    - some-service-2
-target_envs:
-    - stage
-    - prod
-folder_path: "promotion-jobs"
+version: 2
+jobs:
+  nothing:
+    working_directory: ~/circleci-demo
+    docker:
+      - image: gcr.io/s2-kubeflow-master-249419/replica-docker
+    steps:
+      - checkout
+      - run: groovy -v
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
